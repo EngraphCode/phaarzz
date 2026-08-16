@@ -89,6 +89,7 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		<main>
 			<section>
+				{posts.length === 0 && <p>No posts yet — check back soon.</p>}
 				<ul>
 					{
 						posts.map((post) => (
