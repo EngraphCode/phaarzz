@@ -1,0 +1,26 @@
+{
+	"name": "@phaarzz/ui",
+	"version": "0.1.0",
+	"description": "Phaarzz design system — React component library.",
+	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./styles.css": "./dist/index.css",
+		"./tokens.css": "./src/tokens.css"
+	},
+	"files": ["dist", "src"],
+	"sideEffects": ["*.css"],
+	"scripts": {
+		"build": "node build.mjs && tsc -p tsconfig.build.json"
+	},
+	"peerDependencies": {
+		"react": ">=18",
+		"react-dom": ">=18"
+	}
+}
