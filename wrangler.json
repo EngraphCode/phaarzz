@@ -7,6 +7,8 @@
 		"directory": "./dist",
 		"binding": "ASSETS"
 	},
+	"workers_dev": false,
+	"preview_urls": true,
 	"observability": {
 		"enabled": false,
 		"head_sampling_rate": 1,
