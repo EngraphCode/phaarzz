@@ -201,3 +201,8 @@ dist
 ### Astro ###
 .astro/
 design-system/dist/
+.ds-sync/
+ds-bundle/
+design-system/.design-sync/.cache/
+design-system/.design-sync/learnings/
+design-system/.design-sync/node_modules

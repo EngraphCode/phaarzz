@@ -145,7 +145,7 @@
    system-resident so the identity costs no extra font payload.
 */
 :root {
-	--font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+	--font-display: "Fraunces", Georgia, serif;
 	--font-body: "Atkinson", system-ui, -apple-system, sans-serif;
 
 	--text-xs: 0.8125rem;

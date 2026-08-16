@@ -14,7 +14,7 @@ await build({
 	jsx: 'automatic',
 	outfile: 'dist/index.js',
 	external: ['react', 'react-dom', 'react/jsx-runtime'],
-	loader: { '.css': 'css' },
+	loader: { '.css': 'css', '.woff': 'file', '.woff2': 'file' },
 	sourcemap: true,
 	logLevel: 'info',
 });

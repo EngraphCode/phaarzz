@@ -1,0 +1,43 @@
+{
+	"projectId": "9b847e5f-e74b-4c2a-96c9-5878df28f94c",
+	"shape": "package",
+	"pkg": "@phaarzz/ui",
+	"globalName": "PhaarzzUI",
+	"buildCmd": "npm run build",
+	"srcDir": "src",
+	"cssEntry": "dist/index.css",
+	"tokensGlob": "src/tokens.css",
+	"componentSrcMap": {
+		"THEME_STORAGE_KEY": null
+	},
+	"overrides": {
+		"Container": {
+			"cardMode": "column"
+		},
+		"Field": {
+			"cardMode": "column"
+		},
+		"Header": {
+			"cardMode": "column"
+		},
+		"Hero": {
+			"cardMode": "column"
+		},
+		"MediaFrame": {
+			"cardMode": "column"
+		},
+		"Section": {
+			"cardMode": "column"
+		},
+		"Heading": {
+			"cardMode": "column"
+		},
+		"Root": {
+			"cardMode": "column"
+		}
+	},
+	"provider": {
+		"component": "Root"
+	},
+	"readmeHeader": ".design-sync/conventions.md"
+}
