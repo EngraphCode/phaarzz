@@ -20,10 +20,12 @@ carry the identity:
 
 Buttons and inputs are pill or large-radius by default.
 
-**Type pairs a serif display against a humanist body.** The display stack is
-system-resident (`Iowan Old Style`, `Palatino`, Georgia), so the identity costs
-no additional font payload. Body copy stays on Atkinson, already self-hosted
-and built for legibility.
+**Type pairs a serif display against a humanist body.** Display is Fraunces, a
+variable soft-serif whose organic curves match the shape language; body is
+Atkinson, built for legibility. Both are SIL OFL 1.1 and both ship from this
+package rather than being assumed present — a display stack that relies on
+system serifs looks right only on the author's machine, and falls back to a
+generic serif everywhere else, including wherever designs get rendered.
 
 ## Package
 
