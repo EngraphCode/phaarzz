@@ -3,24 +3,161 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+/**
+ * Single-page marketing site. Copy is placeholder — the structure is the
+ * point for now. Sections are anchored so the header nav resolves.
+ */
+const PILLARS = [
+	{ title: 'Pillar one', body: 'A short line about the first thing Phaarzz does well.' },
+	{ title: 'Pillar two', body: 'A short line about the second thing Phaarzz does well.' },
+	{ title: 'Pillar three', body: 'A short line about the third thing Phaarzz does well.' },
+];
+
+const STEPS = [
+	{ title: 'Step one', body: 'What happens first.' },
+	{ title: 'Step two', body: 'What happens next.' },
+	{ title: 'Step three', body: 'What the customer ends up with.' },
+];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-GB" id="top">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
 		<Header />
-		<main>
-			<h1>{SITE_TITLE}</h1>
-			<p>{SITE_DESCRIPTION}</p>
-			<p>
-				Recent writing lives on the <a href="/blog">blog</a>. There is also an
-				<a href="/about">about page</a>, and an <a href="/rss.xml">RSS feed</a> if you would rather
-				follow along from a reader.
-			</p>
+
+		<main id="main">
+			<section class="section hero">
+				<div class="container">
+					<p class="eyebrow">Coming soon</p>
+					<h1>{SITE_TITLE}</h1>
+					<p class="lede">
+						One line explaining what Phaarzz does and who it is for. Replace this with the real
+						positioning statement.
+					</p>
+					<div class="actions">
+						<a class="button primary" href="#contact">Get in touch</a>
+						<a class="button" href="#what">Learn more</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="what">
+				<div class="container">
+					<h2>What we do</h2>
+					<ul class="grid">
+						{
+							PILLARS.map((pillar) => (
+								<li>
+									<h3>{pillar.title}</h3>
+									<p>{pillar.body}</p>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</section>
+
+			<section class="section" id="how">
+				<div class="container">
+					<h2>How it works</h2>
+					<ol class="grid">
+						{
+							STEPS.map((step) => (
+								<li>
+									<h3>{step.title}</h3>
+									<p>{step.body}</p>
+								</li>
+							))
+						}
+					</ol>
+				</div>
+			</section>
+
+			<section class="section" id="contact">
+				<div class="container">
+					<h2>Contact</h2>
+					<p>Add a contact address, form or booking link here.</p>
+				</div>
+			</section>
 		</main>
+
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.skip-link {
+		position: absolute;
+		left: -9999px;
+		top: 0;
+		padding: 0.75rem 1rem;
+		background: var(--accent);
+		color: var(--accent-foreground);
+		z-index: 20;
+	}
+
+	.skip-link:focus {
+		left: 0;
+	}
+
+	.hero {
+		text-align: left;
+	}
+
+	.eyebrow {
+		margin: 0 0 0.5rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.8125rem;
+		color: var(--muted-foreground);
+	}
+
+	.lede {
+		max-width: 42rem;
+		font-size: 1.25rem;
+		color: var(--muted-foreground);
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 1.5rem;
+	}
+
+	.button {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
+		padding: 0 1.25rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		text-decoration: none;
+		color: var(--foreground);
+	}
+
+	.button.primary {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: var(--accent-foreground);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		gap: 1.5rem;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.grid p {
+		color: var(--muted-foreground);
+		margin: 0;
+	}
+</style>

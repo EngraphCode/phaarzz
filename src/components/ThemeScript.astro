@@ -1,0 +1,38 @@
+---
+import { THEME_STORAGE_KEY } from '../consts';
+
+/**
+ * Applies the stored theme before first paint.
+ *
+ * This MUST stay `is:inline` and MUST be rendered in <head> ahead of any
+ * content. An Astro-bundled <script> becomes a deferred module, which runs
+ * after the document has painted — the page would flash light, then snap to
+ * dark. Inlining it keeps it render-blocking, which is exactly what we want
+ * here: a few hundred bytes of parse time in exchange for no flash.
+ *
+ * Only an explicit choice is applied as a class. When the user is on "auto"
+ * no class is set and the `prefers-color-scheme` media query in global.css
+ * takes over, so system detection still works with JavaScript disabled.
+ */
+const script = `(function () {
+	var root = document.documentElement;
+	// Marks JS as available so the theme toggle can be revealed. A toggle that
+	// cannot do anything is worse than no toggle at all.
+	root.classList.add('js');
+	var stored = null;
+	try {
+		stored = localStorage.getItem('${THEME_STORAGE_KEY}');
+	} catch (e) {
+		// Safari in private mode and blocked-storage settings throw on access.
+		// Falling through leaves the user on "auto", which is a fine default.
+	}
+	if (stored === 'light' || stored === 'dark') {
+		root.classList.add(stored);
+		root.style.colorScheme = stored;
+	} else {
+		root.style.colorScheme = 'light dark';
+	}
+})();`;
+---
+
+<script is:inline set:html={script} />

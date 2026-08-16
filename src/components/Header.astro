@@ -1,47 +1,74 @@
 ---
-import HeaderLink from './HeaderLink.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import { SITE_TITLE } from '../consts';
+
+/**
+ * Single-page site: nav entries are in-page anchors, not routes.
+ */
+const SECTIONS = [
+	{ href: '#what', label: 'What we do' },
+	{ href: '#how', label: 'How it works' },
+	{ href: '#contact', label: 'Contact' },
+];
 ---
 
 <header>
-	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
-		</div>
-	</nav>
+	<div class="container bar">
+		<a class="brand" href="#top">{SITE_TITLE}</a>
+		<nav aria-label="Sections">
+			{SECTIONS.map((section) => <a href={section.href}>{section.label}</a>)}
+		</nav>
+		<ThemeToggle />
+	</div>
 </header>
+
 <style>
 	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background: var(--background);
+		border-bottom: 1px solid var(--border);
 	}
 
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+	.bar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem 1.5rem;
+		padding-block: 0.5rem;
 	}
+
+	.brand {
+		font-weight: 700;
+		font-size: 1.125rem;
+		color: var(--foreground);
+		text-decoration: none;
+		margin-right: auto;
+	}
+
 	nav {
 		display: flex;
-		align-items: center;
-		justify-content: space-between;
+		gap: 1.25rem;
+		font-size: 0.9375rem;
 	}
+
 	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+		color: var(--muted-foreground);
 		text-decoration: none;
+		padding-block: 0.5rem;
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
+
+	nav a:hover {
+		color: var(--foreground);
+	}
+
+	@media (max-width: 40rem) {
+		nav {
+			order: 3;
+			width: 100%;
+			justify-content: space-between;
+			gap: 0.5rem;
+		}
 	}
 </style>
