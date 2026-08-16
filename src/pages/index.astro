@@ -1,92 +1,405 @@
 ---
+import { getImage } from 'astro:assets';
+import {
+	Badge,
+	Button,
+	Card,
+	Container,
+	Eyebrow,
+	Footer,
+	Grid,
+	Header,
+	Heading,
+	MediaFrame,
+	Root,
+	Section,
+	Text,
+} from '@phaarzz/ui';
+import parlourInterior from '../assets/parlour-interior.png';
 import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import PhaarzzMark from '../components/PhaarzzMark.astro';
+import Waitlist from '../components/Waitlist';
+import { CITY, SITE_DESCRIPTION } from '../consts';
 
 /**
- * Single-page marketing site. Copy is placeholder — the structure is the
- * point for now. Sections are anchored so the header nav resolves.
+ * The Phaarzz one-pager: prototype advert up top, mini pitch deck below.
+ * Everything renders static except the header (theme toggle) and the
+ * waitlist card, which hydrate as islands.
  */
-const PILLARS = [
-	{ title: 'Pillar one', body: 'A short line about the first thing Phaarzz does well.' },
-	{ title: 'Pillar two', body: 'A short line about the second thing Phaarzz does well.' },
-	{ title: 'Pillar three', body: 'A short line about the third thing Phaarzz does well.' },
+const PAGE_TITLE = "Phaarzz — A room of one's own";
+
+const NAV_LINKS = [
+	{ href: '#how', label: 'How it works' },
+	{ href: '#parlour', label: 'The Parlour' },
+	{ href: '#membership', label: 'Membership' },
+	{ href: '#investors', label: 'Investors' },
 ];
 
 const STEPS = [
-	{ title: 'Step one', body: 'What happens first.' },
-	{ title: 'Step two', body: 'What happens next.' },
-	{ title: 'Step three', body: 'What the customer ends up with.' },
+	{
+		title: 'Open the app',
+		body: 'Find your nearest Parlour, check pod availability, and unlock the door with one tap. No reception desk. No small talk.',
+	},
+	{
+		title: 'Slip inside',
+		body: 'A warm central parlour — soft light, good mirrors, company if you want it. Off every side, private pods big enough to lie down in.',
+	},
+	{
+		title: 'Let it go',
+		body: 'Every pod runs high-power extraction through twin charcoal filters — six air changes a minute. Nobody hears. Nobody knows.',
+	},
 ];
+
+const POD_FEATURES = [
+	{ name: 'A chaise longue', detail: 'stretch out properly; relief favours the horizontal.' },
+	{ name: 'Dimmable lighting', detail: 'from golden hour to practically midnight.' },
+	{
+		name: 'Music & soundscapes',
+		detail: 'Chopin to white noise, at whatever volume the moment requires.',
+	},
+	{
+		name: 'Vanity mirror & touch-up shelf',
+		detail: 'leave looking like nothing happened. Nothing did.',
+	},
+	{ name: 'Aromatherapy after-mist', detail: 'you arrive composed and depart a rose garden.' },
+];
+
+/* Founding-member pricing, locked for life for the waitlist. */
+const TIERS = [
+	{
+		name: 'Whisper',
+		price: 12,
+		was: 16,
+		loved: false,
+		blurb: 'Four visits a month, any Parlour, off-peak. For the occasional emergency elegance.',
+	},
+	{
+		name: 'Breeze',
+		price: 24,
+		was: 32,
+		loved: true,
+		blurb: 'Twelve visits, all hours, plus a monthly bring-a-friend pass. Generosity is a virtue.',
+	},
+	{
+		name: 'Gale',
+		price: 39,
+		was: 52,
+		loved: false,
+		blurb: 'Unlimited visits, priority pod at peak times, two guest passes. For women of conviction.',
+	},
+];
+
+/*
+ * Investor model. 8 pods x 3 visits/hr x 14h = 336 visits/day capacity;
+ * blended £3.90 per visit.
+ */
+const UTILISATION = 70; // percent
+const BUILD_COST = 185_000;
+const CONTRIBUTION_MARGIN = 0.62;
+const monthlyRevenue = 336 * (UTILISATION / 100) * 30 * 3.9;
+const monthlyRevenueLabel = `£${(monthlyRevenue / 1000).toFixed(1)}k`;
+const paybackMonths = Math.round(BUILD_COST / (monthlyRevenue * CONTRIBUTION_MARGIN));
+
+const STATS = [
+	{ figure: '4.7M', caption: `women in Greater ${CITY} — our first catchment` },
+	{ figure: '£2.1bn', caption: 'UK annual spend on discreet personal-wellness spaces' },
+	{ figure: '83%', caption: 'of women surveyed suppress in public daily — internal survey, n = 412' },
+];
+
+const UNIT_ECONOMICS = [
+	{ label: 'Build cost per unit (8 pods)', value: '£185k' },
+	{ label: `Revenue per unit at ${UTILISATION}% utilisation`, value: `${monthlyRevenueLabel}/mo` },
+	{ label: 'Contribution margin', value: `${CONTRIBUTION_MARGIN * 100}%` },
+	{ label: 'Payback per unit', value: `${paybackMonths} months` },
+];
+
+const USE_OF_FUNDS = [
+	{ label: `First two ${CITY} Parlours`, pct: 45 },
+	{ label: 'App & access platform', pct: 25 },
+	{ label: 'Manufacturing tooling', pct: 20 },
+	{ label: 'Team & operations', pct: 10 },
+];
+
+const TEAM = [
+	{
+		name: 'Dr Jo',
+		role: 'Founder & CEO',
+		bio: "Ten years opening members' clubs women actually use; left to build the room they kept asking for.",
+	},
+	{
+		name: 'Dr Kelly',
+		role: 'Founder & CPO',
+		bio: 'Owns the product end to end — the app, the unlock flow, and the pod experience itself.',
+	},
+	{
+		name: 'Dr Gabs',
+		role: 'CIO',
+		bio: 'Runs the data and access platform. Discretion by design: we know occupancy, never occupants.',
+	},
+	{
+		name: 'Dr Jim',
+		role: 'COO',
+		bio: 'Manufacturing and rollout — from central factory to a two-day on-site assembly, city after city.',
+	},
+];
+
+const parlourImage = await getImage({ src: parlourInterior, width: 1080, format: 'webp' });
 ---
 
 <!doctype html>
 <html lang="en-GB" id="top">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={PAGE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
-		<a class="skip-link" href="#main">Skip to content</a>
-		<Header />
+		<Root>
+			<a class="skip-link" href="#main">Skip to content</a>
+			<Header client:load brand="Phaarzz" brandHref="#top" links={NAV_LINKS} />
 
-		<main id="main">
-			<section class="section hero">
-				<div class="container">
-					<p class="eyebrow">Coming soon</p>
-					<h1>{SITE_TITLE}</h1>
-					<p class="lede">
-						One line explaining what Phaarzz does and who it is for. Replace this with the real
-						positioning statement.
-					</p>
-					<div class="actions">
-						<a class="button primary" href="#contact">Get in touch</a>
-						<a class="button" href="#what">Learn more</a>
+			<main id="main">
+				<!-- ===== Hero: the prototype advert ===== -->
+				<div class="hero">
+					<div class="split-grid">
+						<div class="hero-copy">
+							<Eyebrow>Now unlacing — {CITY} first</Eyebrow>
+							<Heading level={1}>A room of one's own.</Heading>
+							<Text size="lg" muted>
+								Phaarzz is a members' parlour where a woman can finally, gloriously, let go.
+								Beautiful private pods, serious extraction engineering, and a strict no-questions
+								policy.
+							</Text>
+							<div class="actions">
+								<Button href="#waitlist">Join the waitlist</Button>
+								<Button href="#investors" variant="secondary">For investors</Button>
+							</div>
+							<Text size="sm" muted>Nobody hears. Nobody knows. Everybody feels better.</Text>
+						</div>
+						<MediaFrame shape="arch">
+							<div class="hero-figure">
+								<PhaarzzMark />
+							</div>
+						</MediaFrame>
 					</div>
 				</div>
-			</section>
 
-			<section class="section" id="what">
-				<div class="container">
-					<h2>What we do</h2>
-					<ul class="grid">
-						{
-							PILLARS.map((pillar) => (
-								<li>
-									<h3>{pillar.title}</h3>
-									<p>{pillar.body}</p>
-								</li>
-							))
-						}
-					</ul>
-				</div>
-			</section>
+				<!-- ===== How it works ===== -->
+				<Section id="how">
+					<Container>
+						<div class="section-body">
+							<div class="section-head">
+								<Eyebrow>How it works</Eyebrow>
+								<Heading level={2}>Three minutes to bliss</Heading>
+							</div>
+							<Grid>
+								{
+									STEPS.map((step, index) => (
+										<Card>
+											<div class="card-body">
+												<Badge tone="soft">{String(index + 1).padStart(2, '0')}</Badge>
+												<Heading level={3}>{step.title}</Heading>
+												<Text size="sm" muted>
+													{step.body}
+												</Text>
+											</div>
+										</Card>
+									))
+								}
+							</Grid>
+						</div>
+					</Container>
+				</Section>
 
-			<section class="section" id="how">
-				<div class="container">
-					<h2>How it works</h2>
-					<ol class="grid">
-						{
-							STEPS.map((step) => (
-								<li>
-									<h3>{step.title}</h3>
-									<p>{step.body}</p>
-								</li>
-							))
-						}
-					</ol>
-				</div>
-			</section>
+				<!-- ===== Inside: The Parlour ===== -->
+				<Section id="parlour">
+					<Container>
+						<div class="split-grid">
+							<MediaFrame
+								shape="arch"
+								src={parlourImage.src}
+								alt={`Inside a Phaarzz parlour — an intimate members' lounge in blush pink and plum, arched doorways leading to private pods`}
+								style={{ height: '480px' }}
+							/>
+							<div class="parlour-copy">
+								<div class="section-head">
+									<Eyebrow>Inside</Eyebrow>
+									<Heading level={2}>The Parlour</Heading>
+									<Text muted>
+										Think powder room, not public convenience. Every pod is dressed for the
+										occasion:
+									</Text>
+								</div>
+								<div class="features">
+									{
+										POD_FEATURES.map((feature) => (
+											<div class="feature">
+												<span class="dot" aria-hidden="true" />
+												<Text size="sm">
+													<strong>{feature.name}</strong> — {feature.detail}
+												</Text>
+											</div>
+										))
+									}
+								</div>
+								<Text size="sm" muted>
+									Under the wallpaper: sealed acoustic lining, high-power extraction, twin charcoal
+									filters. The romance is upholstery-deep; the engineering goes to the studs.
+								</Text>
+							</div>
+						</div>
+					</Container>
+				</Section>
 
-			<section class="section" id="contact">
-				<div class="container">
-					<h2>Contact</h2>
-					<p>Add a contact address, form or booking link here.</p>
-				</div>
-			</section>
-		</main>
+				<!-- ===== Membership ===== -->
+				<Section id="membership">
+					<Container>
+						<div class="section-body">
+							<div class="section-head">
+								<Eyebrow>Membership</Eyebrow>
+								<Heading level={2}>Little luxuries, priced like one</Heading>
+								<Text size="sm" muted>Founding-member pricing, locked for life for the waitlist.</Text>
+							</div>
+							<Grid>
+								{
+									TIERS.map((tier) => (
+										<Card>
+											<div class="card-body tier">
+												{tier.loved ? (
+													<div class="tier-name">
+														<Heading level={3}>{tier.name}</Heading>
+														<Badge tone="primary">Most loved</Badge>
+													</div>
+												) : (
+													<Heading level={3}>{tier.name}</Heading>
+												)}
+												<div class="price">
+													<span class="price-amount">£{tier.price}</span>
+													<span class="price-period">/month</span>
+													<span class="price-was">£{tier.was}</span>
+												</div>
+												<Text size="sm" muted>
+													{tier.blurb}
+												</Text>
+											</div>
+										</Card>
+									))
+								}
+							</Grid>
+						</div>
+					</Container>
+				</Section>
 
-		<Footer />
+				<!-- ===== For investors: the mini pitch deck ===== -->
+				<Section id="investors" style={{ background: 'var(--surface-sunken)' }}>
+					<Container>
+						<div class="investors-body">
+							<div class="section-head">
+								<Eyebrow>For investors</Eyebrow>
+								<Heading level={2}>The market has been holding it in</Heading>
+								<Text muted>
+									Half the population performs digestive composure in public, every day, for free.
+									Phaarzz turns that unmet need into dense, repeatable urban real estate — {CITY}
+									first, then every major city.
+								</Text>
+							</div>
+
+							<div class="stats">
+								{
+									STATS.map((stat) => (
+										<div class="stat">
+											<span class="stat-figure">{stat.figure}</span>
+											<Text size="sm" muted>
+												{stat.caption}
+											</Text>
+										</div>
+									))
+								}
+							</div>
+
+							<div class="invest-grid">
+								<Card title="Unit economics">
+									<div class="ledger">
+										{
+											UNIT_ECONOMICS.map((row, index) => (
+												<div class:list={['ledger-row', { last: index === UNIT_ECONOMICS.length - 1 }]}>
+													<Text size="sm" muted>
+														{row.label}
+													</Text>
+													<Text size="sm">
+														<strong>{row.value}</strong>
+													</Text>
+												</div>
+											))
+										}
+										<Text size="sm" muted>
+											Units are manufactured centrally; once footing and utilities are in, on-site
+											assembly takes two days.
+										</Text>
+									</div>
+								</Card>
+								<Card title="The ask — £500k pre-seed">
+									<div class="funds">
+										{
+											USE_OF_FUNDS.map((item) => (
+												<div class="fund">
+													<div class="fund-head">
+														<Text size="sm">{item.label}</Text>
+														<Text size="sm" muted>
+															{item.pct}%
+														</Text>
+													</div>
+													<div class="bar">
+														<div class="bar-fill" style={`width: ${item.pct}%;`} />
+													</div>
+												</div>
+											))
+										}
+										<Button href="mailto:invest@phaarzz.com" variant="secondary" size="sm">
+											Request the full deck
+										</Button>
+									</div>
+								</Card>
+							</div>
+
+							<div class="team">
+								<Heading level={3}>The team</Heading>
+								<div class="team-grid">
+									{
+										TEAM.map((member) => (
+											<div class="member">
+												<MediaFrame shape="circle">
+													<div class="avatar" />
+												</MediaFrame>
+												<Text size="sm">
+													<strong>
+														{member.name} — {member.role}
+													</strong>
+												</Text>
+												<Text size="sm" muted>
+													{member.bio}
+												</Text>
+											</div>
+										))
+									}
+								</div>
+							</div>
+						</div>
+					</Container>
+				</Section>
+
+				<!-- ===== Waitlist ===== -->
+				<Section id="waitlist">
+					<Container>
+						<div class="waitlist-wrap">
+							<Waitlist client:visible city={CITY} />
+						</div>
+					</Container>
+				</Section>
+			</main>
+
+			<Footer>
+				Powder rooms for the twenty-first century. Made with a straight face in {CITY}.
+			</Footer>
+		</Root>
 	</body>
 </html>
 
@@ -95,9 +408,9 @@ const STEPS = [
 		position: absolute;
 		left: -9999px;
 		top: 0;
-		padding: 0.75rem 1rem;
-		background: var(--accent);
-		color: var(--accent-foreground);
+		padding: var(--space-3) var(--space-4);
+		background: var(--primary);
+		color: var(--on-primary);
 		z-index: 20;
 	}
 
@@ -105,59 +418,235 @@ const STEPS = [
 		left: 0;
 	}
 
+	/* ===== Layout glue (tokens only — the components carry the identity) ===== */
+
+	.split-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		gap: var(--space-12);
+		align-items: center;
+	}
+
 	.hero {
-		text-align: left;
+		max-width: var(--container);
+		margin-inline: auto;
+		padding: var(--space-16) var(--space-6) var(--space-24);
 	}
 
-	.eyebrow {
-		margin: 0 0 0.5rem;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-size: 0.8125rem;
-		color: var(--muted-foreground);
-	}
-
-	.lede {
-		max-width: 42rem;
-		font-size: 1.25rem;
-		color: var(--muted-foreground);
+	.hero-copy {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
 	}
 
 	.actions {
 		display: flex;
+		gap: var(--space-3);
 		flex-wrap: wrap;
-		gap: 0.75rem;
-		margin-top: 1.5rem;
 	}
 
-	.button {
-		display: inline-flex;
+	.hero-figure {
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		height: 100%;
+		min-height: 480px;
+		padding-top: var(--space-8);
+	}
+
+	.section-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-8);
+	}
+
+	.section-head {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		max-width: var(--measure);
+	}
+
+	.card-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+		align-items: flex-start;
+	}
+
+	/* ===== The Parlour ===== */
+
+	.parlour-copy {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+	}
+
+	.features {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.feature {
+		display: flex;
+		gap: var(--space-3);
+		align-items: baseline;
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+		border-radius: var(--radius-pill);
+		background: var(--primary);
+		flex: none;
+		transform: translateY(-2px);
+	}
+
+	/* ===== Membership ===== */
+
+	.tier {
+		height: 100%;
+	}
+
+	.tier-name {
+		display: flex;
+		gap: var(--space-3);
 		align-items: center;
-		min-height: 2.75rem;
-		padding: 0 1.25rem;
-		border: 1px solid var(--border);
-		border-radius: var(--radius);
-		text-decoration: none;
-		color: var(--foreground);
 	}
 
-	.button.primary {
-		background: var(--accent);
-		border-color: var(--accent);
-		color: var(--accent-foreground);
+	.price {
+		display: flex;
+		align-items: baseline;
+		gap: var(--space-2);
 	}
 
-	.grid {
+	.price-amount {
+		font-family: var(--font-display);
+		font-size: var(--text-xl);
+		color: var(--ink);
+	}
+
+	.price-period,
+	.price-was {
+		font-size: var(--text-sm);
+		color: var(--ink-muted);
+	}
+
+	.price-was {
+		text-decoration: line-through;
+	}
+
+	/* ===== Investors ===== */
+
+	.investors-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-12);
+	}
+
+	.stats {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-		gap: 1.5rem;
-		margin: 1.5rem 0 0;
-		padding: 0;
-		list-style: none;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: var(--space-6);
 	}
 
-	.grid p {
-		color: var(--muted-foreground);
-		margin: 0;
+	.stat {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	.stat-figure {
+		font-family: var(--font-display);
+		font-size: var(--text-2xl);
+		color: var(--primary);
+		line-height: var(--leading-tight);
+	}
+
+	.invest-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		gap: var(--space-6);
+		align-items: stretch;
+	}
+
+	.ledger {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.ledger-row {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--space-4);
+		border-bottom: 1px solid var(--border);
+		padding-bottom: var(--space-2);
+	}
+
+	.ledger-row.last {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.funds {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.fund {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+	}
+
+	.fund-head {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.bar {
+		height: 8px;
+		border-radius: var(--radius-pill);
+		background: var(--primary-soft);
+	}
+
+	.bar-fill {
+		height: 100%;
+		border-radius: var(--radius-pill);
+		background: var(--primary);
+	}
+
+	.team {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.team-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: var(--space-6);
+	}
+
+	.member {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		align-items: flex-start;
+	}
+
+	.avatar {
+		width: 120px;
+		height: 120px;
+	}
+
+	/* ===== Waitlist ===== */
+
+	.waitlist-wrap {
+		max-width: 34rem;
+		margin-inline: auto;
 	}
 </style>

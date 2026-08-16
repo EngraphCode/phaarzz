@@ -1,6 +1,8 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
+// Design-system styles first (tokens, fonts, component classes), then the
+// site's own base stylesheet, which resolves against those tokens. Both are
+// included on all pages through the use of the <BaseHead /> component.
+import '@phaarzz/ui/styles.css';
 import '../styles/global.css';
 import ThemeScript from './ThemeScript.astro';
 
@@ -23,10 +25,6 @@ const { title, description, image = '/og-default.jpg' } = Astro.props;
 
 <!-- Applies the stored theme before first paint. Keep this early in <head>. -->
 <ThemeScript />
-
-<!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />

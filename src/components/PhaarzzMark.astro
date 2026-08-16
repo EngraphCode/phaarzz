@@ -1,0 +1,46 @@
+---
+/**
+ * The Phaarzz mark — a 40s glamour silhouette, finger to her lips
+ * ("Logo A: The Ballgown" from the brand exploration).
+ *
+ * Line work takes `--ink` and the lip dot takes `--primary`, so the mark
+ * re-themes with the page. Native 140x250 viewBox; pass width/height to
+ * scale it.
+ */
+interface Props {
+	width?: number;
+	height?: number;
+}
+
+const { width = 240, height = 428 } = Astro.props;
+---
+
+<svg
+	viewBox="0 0 140 250"
+	width={width}
+	height={height}
+	fill="none"
+	stroke="var(--ink)"
+	stroke-width="2"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	role="img"
+	aria-label="The Phaarzz woman — finger to her lips"
+>
+	<path d="M59 22 C58 10 72 6 80 12 C88 18 86 30 82 35"></path>
+	<path d="M59 22 C53 28 54 38 60 43"></path>
+	<path d="M62 20 C66 26 64 33 60 36"></path>
+	<path d="M60 43 C62 47 66 49 71 49 C77 49 81 45 82 40"></path>
+	<path d="M74 47 C74 43 73 41 71 39"></path>
+	<circle cx="68" cy="37" r="1.6" fill="var(--primary)" stroke="none"></circle>
+	<path d="M80 52 C79 46 76 42 72 40"></path>
+	<path d="M65 51 C60 65 61 80 65 94"></path>
+	<path d="M79 52 C84 66 82 81 77 94"></path>
+	<path d="M65 55 C53 62 50 76 59 88"></path>
+	<path d="M59 88 C61 90 64 91 66 90"></path>
+	<path d="M65 94 C42 126 26 176 31 226"></path>
+	<path d="M77 94 C102 126 116 176 111 226"></path>
+	<path d="M31 226 C56 238 86 238 111 226"></path>
+	<path d="M66 100 C58 140 54 180 58 222"></path>
+	<path d="M84 104 C90 142 92 180 89 222"></path>
+</svg>
