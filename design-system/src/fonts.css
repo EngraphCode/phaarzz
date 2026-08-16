@@ -1,0 +1,35 @@
+/*
+  Fonts the library ships.
+
+  Both families are self-hosted rather than assumed, because a design system
+  that only looks right on the author's machine isn't one. Claude Design
+  renders on Linux, where none of the classic system serifs exist — a
+  system-stack display face would silently fall back there and every design
+  built with this DS would be off-brand.
+
+  Atkinson Hyperlegible — Braille Institute, SIL OFL 1.1. Body.
+  Fraunces — SIL OFL 1.1. Display. A variable soft-serif whose organic,
+  slightly wonky curves match the identity's shape language far better than a
+  neutral system serif. One file covers the whole weight range.
+*/
+@font-face {
+	font-family: "Atkinson";
+	src: url("./fonts/atkinson-regular.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Atkinson";
+	src: url("./fonts/atkinson-bold.woff") format("woff");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Fraunces";
+	src: url("./fonts/fraunces-variable.woff2") format("woff2-variations");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}

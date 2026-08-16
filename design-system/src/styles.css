@@ -4,6 +4,7 @@
   restyles the whole library without touching this file.
 */
 @import './tokens.css';
+@import './fonts.css';
 
 /* ===== BASE ===== */
 .pz-root {
@@ -18,6 +19,17 @@
 .pz-root *::before,
 .pz-root *::after {
 	box-sizing: border-box;
+}
+
+/* Plain links take the brand accent. Scoped to unclassed anchors so it can
+   never override Button rendered as <a> — :not([class]) excludes anything the
+   library has already styled. */
+:where(.pz-root) a:not([class]) {
+	color: var(--primary);
+	text-underline-offset: 0.15em;
+}
+:where(.pz-root) a:not([class]):hover {
+	color: var(--primary-hover);
 }
 
 :where(.pz-root) :focus-visible {
